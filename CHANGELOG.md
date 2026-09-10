@@ -4,6 +4,24 @@ All notable changes to softpack are recorded here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-09-10
+
+### Fixed
+
+- **Upload instructions named one directory when there are two.** The
+  metadata file belongs in `<home>/.softaculous/backups/` and only the
+  archive goes to `<home>/softaculous_backups/`. Corrected in the README and
+  in the message `build` prints when it finishes, which now names each half
+  and its destination separately and points out that `.softaculous` is hidden
+  from most FTP clients by default.
+
+  Symptoms of getting it wrong, also now documented: the backup never appears
+  in the Softaculous list (metadata in the wrong directory), or it appears but
+  Restore fails immediately (archive in the wrong directory).
+
+  No change to the `path` key in the metadata — it refers to where the archive
+  lives, and `<home>/softaculous_backups` was already right.
+
 ## [1.0.0] - 2026-09-10
 
 First working release. Derived by dissecting a genuine Softaculous backup pair
@@ -56,4 +74,5 @@ and reproducing the format from scratch.
 - Changing the table prefix during export is not supported.
 - Multisite is not handled.
 
+[1.0.1]: https://example.invalid/softpack/releases/tag/v1.0.1
 [1.0.0]: https://example.invalid/softpack/releases/tag/v1.0.0

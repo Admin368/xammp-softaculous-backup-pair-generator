@@ -332,8 +332,17 @@ TEXT);
             return 1;
         }
 
-        Cli::out('  Upload ' . Cli::bold('both') . ' files to ' . Cli::cyan($target['home'] . '/softaculous_backups/'));
-        Cli::out('  then cPanel > Softaculous > Backups > Restore.');
+        // The two halves go to different directories: the metadata into
+        // Softaculous' hidden data folder, the archive into the visible one.
+        Cli::out('  Upload the two halves to ' . Cli::bold('different') . ' directories, in binary mode:');
+        Cli::out();
+        Cli::out('    ' . str_pad($result['name'], 34) . Cli::dim(' -> ')
+            . Cli::cyan($target['home'] . '/.softaculous/backups/'));
+        Cli::out('    ' . str_pad($result['name'] . '.tar.gz', 34) . Cli::dim(' -> ')
+            . Cli::cyan($target['home'] . '/softaculous_backups/'));
+        Cli::out();
+        Cli::out('  ' . Cli::dim('.softaculous is hidden - enable "show hidden files" in your FTP client.'));
+        Cli::out('  Then cPanel > Softaculous > Backups > Restore.');
         Cli::out();
         Cli::out('  ' . Cli::dim('Database password: ') . $target['db_pass']);
         Cli::out();

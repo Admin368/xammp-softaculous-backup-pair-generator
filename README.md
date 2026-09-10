@@ -24,8 +24,18 @@ wp.<insid>.<YYYY-MM-DD_HH-MM-SS>          PHP-serialised metadata, no extension
 wp.<insid>.<YYYY-MM-DD_HH-MM-SS>.tar.gz   site files + database + artefacts
 ```
 
-Upload **both** to `/home<n>/<cpuser>/softaculous_backups/`, then
-cPanel → Softaculous → Backups → Restore.
+They share a base name but go to **two different directories** on the server:
+
+```
+wp.<insid>.<stamp>          ->  <home>/.softaculous/backups/
+wp.<insid>.<stamp>.tar.gz   ->  <home>/softaculous_backups/
+```
+
+`.softaculous` is a dot-directory — turn on "show hidden files" in your FTP
+client or you will not see it. Then cPanel → Softaculous → Backups → Restore.
+
+If the backup never appears in the list, the metadata is in the wrong one of
+those two directories. If it appears but Restore fails at once, the archive is.
 
 ---
 
