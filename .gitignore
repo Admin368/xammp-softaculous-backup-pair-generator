@@ -1,0 +1,17 @@
+# Build output and scratch
+/out/
+/tmp/
+*.tar
+*.tar.gz
+
+# Projects live in SOFTPACK_HOME, but never commit one if it lands here:
+# they contain database passwords.
+/projects/
+*.softpack.json
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini

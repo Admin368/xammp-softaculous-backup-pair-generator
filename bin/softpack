@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# softpack launcher (POSIX shells, including Git Bash on Windows).
+# Resolves its own location so the tool can live anywhere on PATH.
+
+self=$0
+while [ -L "$self" ]; do
+    link=$(readlink "$self")
+    case $link in
+        /*) self=$link ;;
+        *)  self=$(dirname "$self")/$link ;;
+    esac
+done
+here=$(cd -- "$(dirname -- "$self")" && pwd)
+
+php="${SOFTPACK_PHP:-php}"
+
+exec "$php" "$here/../softpack.php" "$@"
