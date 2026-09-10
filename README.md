@@ -8,7 +8,7 @@ Run it inside a WordPress folder. It works out the install for itself, asks
 once about the server, saves that as a project, and rebuilds on demand.
 
 ```
-$ cd /c/xampp2/htdocs/legacy
+$ cd /c/xampp/htdocs/mysite
 $ softpack init          # five questions, saved as a project
 $ softpack build         # produces the pair, then proves it is sound
 ```
@@ -50,7 +50,7 @@ Clone or copy the repository somewhere permanent, then put `bin/` on PATH.
 **Windows (PowerShell, current user):**
 
 ```powershell
-$bin = "C:\xampp2\tools\softpack\bin"
+$bin = "C:\tools\softpack\bin"   # wherever you cloned it
 [Environment]::SetEnvironmentVariable(
     "Path",
     [Environment]::GetEnvironmentVariable("Path", "User") + ";$bin",
@@ -60,7 +60,7 @@ $bin = "C:\xampp2\tools\softpack\bin"
 If `php` is not on PATH — a normal XAMPP situation — point softpack at it:
 
 ```powershell
-[Environment]::SetEnvironmentVariable("SOFTPACK_PHP", "C:\xampp2\php\php.exe", "User")
+[Environment]::SetEnvironmentVariable("SOFTPACK_PHP", "C:\xampp\php\php.exe", "User")
 ```
 
 Open a new terminal, then check:

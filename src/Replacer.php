@@ -9,7 +9,7 @@ namespace Softpack;
  *
  * WordPress - and Elementor especially - stores absolute URLs inside
  * serialised arrays, where every string carries its own byte length
- * ("s:25:\"http://localhost/legacy\""). A plain str_replace that changes the
+ * ("s:23:\"http://localhost/mysite\""). A plain str_replace that changes the
  * length silently corrupts the record, so serialised values are unpacked,
  * rewritten and repacked instead.
  *
