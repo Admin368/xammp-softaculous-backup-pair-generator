@@ -232,6 +232,15 @@ final class Archiver
     }
 
     /**
+     * Run an external command and collect its output.
+     *
+     * stdout and stderr go to temporary files rather than pipes. With pipes,
+     * a child that writes more to stderr than the pipe buffer holds blocks
+     * forever while the parent is still blocked reading stdout - a deadlock
+     * that shows up as a build that simply stops, using no CPU. stdin is
+     * bound to the null device so an unexpected prompt fails fast instead of
+     * hanging on an inherited handle.
+     *
      * @param string[] $args
      * @return array{code:int,out:string,err:string}
      */
@@ -242,18 +251,31 @@ final class Archiver
             $command .= ' ' . escapeshellarg($arg);
         }
 
-        $descriptors = [1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
-        $process     = proc_open($command, $descriptors, $pipes);
+        $outFile = (string) tempnam(sys_get_temp_dir(), 'sp-out');
+        $errFile = (string) tempnam(sys_get_temp_dir(), 'sp-err');
+        $null    = stripos(PHP_OS_FAMILY, 'win') === 0 ? 'NUL' : '/dev/null';
+
+        $descriptors = [
+            0 => ['file', $null, 'r'],
+            1 => ['file', $outFile, 'w'],
+            2 => ['file', $errFile, 'w'],
+        ];
+
+        $process = proc_open($command, $descriptors, $pipes);
         if (!is_resource($process)) {
+            @unlink($outFile);
+            @unlink($errFile);
             throw new Failure("Could not run: {$binary}");
         }
 
-        $out = (string) stream_get_contents($pipes[1]);
-        $err = (string) stream_get_contents($pipes[2]);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
+        $code = proc_close($process);
 
-        return ['code' => proc_close($process), 'out' => $out, 'err' => $err];
+        $out = (string) @file_get_contents($outFile);
+        $err = (string) @file_get_contents($errFile);
+        @unlink($outFile);
+        @unlink($errFile);
+
+        return ['code' => $code, 'out' => $out, 'err' => $err];
     }
 
     private static function path(string $p): string

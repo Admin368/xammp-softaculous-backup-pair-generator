@@ -19,7 +19,7 @@ final class Builder
     private $db;
 
     /** @var string */
-    private $work;
+    private $work = '';
 
     /** @var array{host:string,user:string,pass:string,name:string} */
     private $credentials;
@@ -38,6 +38,20 @@ final class Builder
      * @return array{name:string,dir:string,size:int,passed:bool}
      */
     public function run(string $outputDir, bool $keepTar = false, bool $verify = true): array
+    {
+        try {
+            return $this->build($outputDir, $keepTar, $verify);
+        } finally {
+            // A failed build must not strand a working directory holding a
+            // few hundred megabytes of tar in the system temp folder.
+            $this->cleanup();
+        }
+    }
+
+    /**
+     * @return array{name:string,dir:string,size:int,passed:bool}
+     */
+    private function build(string $outputDir, bool $keepTar, bool $verify): array
     {
         $project = $this->project;
         $project->startBuild(time());
@@ -166,8 +180,6 @@ final class Builder
 
         $project->recordBuild($name, $size, $outputDir);
         $project->save();
-
-        $this->cleanup();
 
         return ['name' => $name, 'dir' => $outputDir, 'size' => $size, 'passed' => $passed];
     }

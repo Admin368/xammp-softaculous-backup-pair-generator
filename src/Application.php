@@ -336,9 +336,10 @@ TEXT);
         // Softaculous' hidden data folder, the archive into the visible one.
         Cli::out('  Upload the two halves to ' . Cli::bold('different') . ' directories, in binary mode:');
         Cli::out();
-        Cli::out('    ' . str_pad($result['name'], 34) . Cli::dim(' -> ')
+        $width = strlen($result['name']) + 8;   // room for the ".tar.gz" suffix
+        Cli::out('    ' . str_pad($result['name'], $width) . Cli::dim(' -> ')
             . Cli::cyan($target['home'] . '/.softaculous/backups/'));
-        Cli::out('    ' . str_pad($result['name'] . '.tar.gz', 34) . Cli::dim(' -> ')
+        Cli::out('    ' . str_pad($result['name'] . '.tar.gz', $width) . Cli::dim(' -> ')
             . Cli::cyan($target['home'] . '/softaculous_backups/'));
         Cli::out();
         Cli::out('  ' . Cli::dim('.softaculous is hidden - enable "show hidden files" in your FTP client.'));
