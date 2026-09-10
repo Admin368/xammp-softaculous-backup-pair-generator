@@ -4,6 +4,27 @@ All notable changes to softpack are recorded here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning is [semantic](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-09-10
+
+### Fixed
+
+- **A build could hang indefinitely.** External commands were given pipes for
+  stdout and stderr, and the parent drained stdout before reading stderr. A
+  child writing more to stderr than the pipe buffer holds blocks on that
+  write while the parent is still blocked on the read — neither ever
+  finishes. Seen as a build stopping dead at the tar step: 13 minutes, no CPU,
+  a zero-byte archive.
+
+  stdout and stderr now go to temporary files, which cannot fill. stdin is
+  bound to the null device so an unexpected prompt fails immediately rather
+  than blocking on an inherited handle.
+
+- A failed build no longer strands its working directory — potentially a few
+  hundred megabytes of tar — in the system temp folder. `Builder::run()`
+  cleans up in a `finally`.
+
+- The two upload paths in the closing message line up again.
+
 ## [1.0.1] - 2026-09-10
 
 ### Fixed
@@ -74,5 +95,6 @@ and reproducing the format from scratch.
 - Changing the table prefix during export is not supported.
 - Multisite is not handled.
 
+[1.0.2]: https://example.invalid/softpack/releases/tag/v1.0.2
 [1.0.1]: https://example.invalid/softpack/releases/tag/v1.0.1
 [1.0.0]: https://example.invalid/softpack/releases/tag/v1.0.0

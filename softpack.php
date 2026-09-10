@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-define('SOFTPACK_VERSION', '1.0.1');
+define('SOFTPACK_VERSION', '1.0.2');
 define('SOFTPACK_ROOT', str_replace('\\', '/', __DIR__));
 
 if (PHP_SAPI !== 'cli') {
